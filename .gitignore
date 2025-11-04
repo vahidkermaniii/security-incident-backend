@@ -1,0 +1,6 @@
+.env
+node_modules/
+*.exe
+*.msi
+*.ps1
+backend/daemon/

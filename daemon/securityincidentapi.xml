@@ -1,0 +1,34 @@
+<service>
+	<id>securityincidentapi.exe</id>
+	<name>Security Incident API</name>
+	<description>Node.js API backend for Security Incident System</description>
+	<executable>C:\Program Files\nodejs\node.exe</executable>
+	<argument>--max_old_space_size=256</argument>
+	<argument>C:\xampp\htdocs\security-system\backend\node_modules\node-windows\lib\wrapper.js</argument>
+	<argument>--file</argument>
+	<argument>C:\xampp\htdocs\security-system\backend\server.js</argument>
+	<argument>--scriptoptions=</argument>
+	<argument>--log</argument>
+	<argument>Security Incident API wrapper</argument>
+	<argument>--grow</argument>
+	<argument>0.5</argument>
+	<argument>--wait</argument>
+	<argument>2</argument>
+	<argument>--maxrestarts</argument>
+	<argument>5</argument>
+	<argument>--abortonerror</argument>
+	<argument>n</argument>
+	<argument>--stopparentfirst</argument>
+	<argument>undefined</argument>
+	<argument>--maxretries</argument>
+	<argument>3</argument>
+	<logmode>rotate</logmode>
+	<logpath>C:/security-incident-logs</logpath>
+	<stoptimeout>30sec</stoptimeout>
+	<serviceaccount>
+		<domain>REPORTSERVER</domain>
+		<user>LocalSystem</user>
+		<password></password>
+	</serviceaccount>
+	<workingdirectory>C:/xampp/htdocs/security-system/backend</workingdirectory>
+</service>
