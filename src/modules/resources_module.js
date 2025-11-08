@@ -65,15 +65,17 @@ async function dbRemove(id) {
 /* --------------------------- STORAGE: LOCAL / SUPA ------------------------- */
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const USE_SUPABASE = !!process.env.SUPABASE_URL && !!process.env.SUPABASE_KEY;
-const SUPA_URL     = process.env.SUPABASE_URL || "";
-const SUPA_KEY     = process.env.SUPABASE_KEY || "";
-const SUPA_BUCKET  = process.env.SUPABASE_BUCKET || "resources";
-const supa = USE_SUPABASE ? createClient(SUPA_URL, SUPA_KEY) : null;
+const SUPA_URL          = process.env.SUPABASE_URL || "";
+const SUPA_ANON_KEY     = process.env.SUPABASE_KEY || "";           // optional
+const SUPA_SERVICE_KEY  = process.env.SUPABASE_SERVICE_KEY || "";   // <-- جدید (اولویت)
+const SUPA_BUCKET       = process.env.SUPABASE_BUCKET || "resources";
+const HAVE_SUPA_KEY     = !!(SUPA_SERVICE_KEY || SUPA_ANON_KEY);
+const USE_SUPABASE      = !!SUPA_URL && HAVE_SUPA_KEY;
+const supa = USE_SUPABASE ? createClient(SUPA_URL, SUPA_SERVICE_KEY || SUPA_ANON_KEY) : null;
 
 const ROUTE_BASE = process.env.RESOURCES_ROUTE_BASE || "/api/resources";
 
-// Local FS fallback (module-relative, not process.cwd)
+// Local FS fallback (module-relative)
 const ENV_FILES_DIR     = process.env.FILES_DIR;
 const DEFAULT_FILES_DIR = path.resolve(__dirname, "../assets/files");
 const WINDOWS_PREF      = "C:\\xampp\\htdocs\\security-system\\backend\\assets\\files";
@@ -317,7 +319,6 @@ router.get("/download/:id", authRequired, async (req, res) => {
     if (!file) return res.status(404).json({ message: "فایل یافت نشد." });
 
     if (USE_SUPABASE) {
-      // Public bucket: redirect به publicUrl کافی است
       const { data } = supa.storage.from(SUPA_BUCKET).getPublicUrl(file.filename);
       return res.redirect(302, data.publicUrl);
       // اگر باکت private شد:
