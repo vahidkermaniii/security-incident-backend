@@ -66,6 +66,8 @@ const DEFAULT_FILES_DIR = path.resolve(process.cwd(), "src", "assets", "files");
 const WINDOWS_PREF      = "C:\\xampp\\htdocs\\security-system\\backend\\src\\assets\\files";
 const FILES_DIR         = ENV_FILES_DIR || (fs.existsSync(WINDOWS_PREF) ? WINDOWS_PREF : DEFAULT_FILES_DIR);
 fs.mkdirSync(FILES_DIR, { recursive: true });
+// (اختیاری برای تست)
+console.log("📂 FILES_DIR =", FILES_DIR);
 
 function sanitizeName(n = "") {
   return String(n).replace(/[\/\\:?*"<>|]+/g, "_").replace(/\s+/g, " ").trim();
