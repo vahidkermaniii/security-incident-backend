@@ -62,7 +62,7 @@ async function dbRemove(id) {
 
 /* ---------------------------------- FILES --------------------------------- */
 const ENV_FILES_DIR     = process.env.FILES_DIR;
-const DEFAULT_FILES_DIR = path.resolve(process.cwd(), "backend", "src", "assets", "files");
+const DEFAULT_FILES_DIR = path.resolve(process.cwd(), "src", "assets", "files");
 const WINDOWS_PREF      = "C:\\xampp\\htdocs\\security-system\\backend\\src\\assets\\files";
 const FILES_DIR         = ENV_FILES_DIR || (fs.existsSync(WINDOWS_PREF) ? WINDOWS_PREF : DEFAULT_FILES_DIR);
 fs.mkdirSync(FILES_DIR, { recursive: true });
