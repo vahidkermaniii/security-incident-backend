@@ -2,25 +2,32 @@
 import jwt from "jsonwebtoken";
 import { pool } from "../config/db.js";
 
+/* ============== تشخیص محیط ============== */
+const isProd = process.env.NODE_ENV === "production";
+
 /* ============== کاندیدهای Secret (سازگار با کد قبلی) ============== */
+/* dev_access_secret_change_me فقط در حالت توسعه به آرایه اضافه می‌شود */
 const CANDIDATE_ACCESS_SECRETS = [
   process.env.JWT_ACCESS_SECRET,
   process.env.JWT_SECRET,
   process.env.ACCESS_SECRET,
-  "dev_access_secret_change_me", // فقط برای توسعه؛ در prod ممنوع
+  !isProd && "dev_access_secret_change_me", // فقط برای توسعه
 ].filter(Boolean);
 
-/* ============== ممنوعیت dev_* در Production ============== */
-const isProd = process.env.NODE_ENV === "production";
-if (isProd && CANDIDATE_ACCESS_SECRETS.some(s => String(s).includes("dev_"))) {
-  throw new Error("Refusing to start with dev JWT secret in production.");
+/* اگر در پروڈاکشن هیچ سکرتی تنظیم نشده باشد، خطای واضح بده */
+if (isProd && CANDIDATE_ACCESS_SECRETS.length === 0) {
+  throw new Error("No JWT secret configured in production.");
 }
 
 /* ============== Verify با هر secret موجود ============== */
 function verifyWithAnySecret(token) {
   let lastErr = null;
   for (const sec of CANDIDATE_ACCESS_SECRETS) {
-    try { return jwt.verify(token, sec); } catch (e) { lastErr = e; }
+    try {
+      return jwt.verify(token, sec);
+    } catch (e) {
+      lastErr = e;
+    }
   }
   if (lastErr) throw lastErr;
   throw new Error("No JWT secret configured.");
